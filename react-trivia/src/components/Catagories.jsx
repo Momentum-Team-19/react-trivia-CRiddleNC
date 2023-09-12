@@ -1,19 +1,21 @@
-function Categories({ trivCatData, setSelCat }) {
+// Catagories.jsx
+import React from "react"
 
-    const handleClick=(event) => {
-        console.log(event.target.id)
-    }
+function Categories({ trivCatData, handleCategory }) {
 
-  return (
-
-  <div>
-    {trivCatData &&
-    // Map over the trivCatData array to render trivia categories
-    trivCatData.map((trivCat) => (
-        // Use a unique key for each category to help React efficiently update the DOM
-        <button id={trivCat.id} onClick={handleClick} key={trivCat.id}>{trivCat.name}</button>
-    ))}
+    return (
+    <div>
+      {trivCatData.map((trivCat) => (
+        <button
+          id={trivCat.id}
+          onClick={() => handleCategory(trivCat)}
+          key={trivCat.id}
+        >
+          {trivCat.name}
+        </button>
+      ))}
     </div>
-  )
+  );
 }
-export default Categories
+
+export default Categories;
