@@ -1,6 +1,7 @@
 // TriviaQuestions.jsx
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import he from "he";
 
 function TriviaQuestions({
   questions,
@@ -21,15 +22,32 @@ function TriviaQuestions({
       .then((response) => setQuestions(response.data.results));
   }, []);
 
-  return (
-    <div>
-      <h2>Trivia Questions</h2>
-      {/* Need to use he.decode to fix symbols */}
-      <p>{quest?.question}</p>
-      <button onClick={handleNextQuestion}>Next Question</button>
-      {/* build button to advance activeQuestInd */}
-    </div>
-  );
+  if (quest) {
+    // combine correct and incorrect answerrs in to one array
+    const all_answers = [quest.correct_answer, ...quest.incorrect_answers].map(
+      (answer) => he.decode(answer)
+    );
+    // decode all_answers and join them in to a string
+
+    return (
+      <div>
+        <h2>Trivia Questions</h2>
+
+        <p>{he.decode(quest.question)}</p>
+        <p>{he.decode(quest.correct_answer)}</p>
+
+        <p>Answers: {all_answers.join(", ")}</p>
+        {/* add answer choices and any additional information */}
+        <button onClick={handleNextQuestion}>Next Question</button>
+      </div>
+    );
+  } else {
+    return (
+      <div>
+        <h2>Trivia Questions</h2>
+      </div>
+    );
+  }
 }
 
 export default TriviaQuestions;
