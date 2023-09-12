@@ -35,6 +35,7 @@ function App() {
           setQuestions={setQuestions}
           activeQuestInd={activeQuestInd}
           setActiveQuestInd={setActiveQuestInd}
+          setHasSelCat={setHasSelCat}
         />
       ) : (
         <Categories trivCatData={trivCatData} handleCategory={handleCategory} />
