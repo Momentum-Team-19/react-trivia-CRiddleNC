@@ -47,12 +47,17 @@ function TriviaQuestions({
     return (
       <div>
         <h2>Trivia Questions</h2>
-
+        {console.log(quest.category)}
         <p>{he.decode(quest.question)}</p>
         <p>{he.decode(quest.correct_answer)}</p>
 
-        <p>Answers: {all_answers.join(", ")}</p>
-        {/* add answer choices and any additional information */}
+        {/* <p>Answers: {all_answers.join(", ")}</p> */}
+        {all_answers.map((answerOption) => (
+          <button key={answerOption} onClick={() => handleAnswer(answerOption)}>
+            {answerOption}
+          </button>
+        ))}
+
         <button onClick={handlePreviousQuestion}>Previous Question</button>
         <button onClick={handleNextQuestion}>Next Question</button>
         <button

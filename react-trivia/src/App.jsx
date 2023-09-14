@@ -14,10 +14,19 @@ function App() {
   const [hasSelCat, setHasSelCat] = useState(false);
   const [questions, setQuestions] = useState([]);
   const [activeQuestInd, setActiveQuestInd] = useState(0);
+  const [wrongAnswerCount, setWrongAnswerCount] = useState(0);
 
   const handleCategory = (trivCatData) => {
     setSelCat(trivCatData);
     setHasSelCat(true);
+  };
+
+  const handleAnswer = (selectedAnswer) => {
+    if (selectedAnswer === he.decode(quest.correct_answer)) {
+    } else {
+      setWrongAnswerCount(wrongAnswerCount + 1);
+    }
+    handleNext;
   };
 
   useEffect(() => {
@@ -36,6 +45,7 @@ function App() {
           activeQuestInd={activeQuestInd}
           setActiveQuestInd={setActiveQuestInd}
           setHasSelCat={setHasSelCat}
+          setWrongAnswerCount={setWrongAnswerCount}
         />
       ) : (
         <Categories trivCatData={trivCatData} handleCategory={handleCategory} />
