@@ -1,9 +1,10 @@
 // QuizResults.jsx
 import React from "react";
 
-function QuizResults({ userAnswers, correctAnswers }) {
+function QuizResults({ userAnswers, correctAnswers, setHasSelCat }) {
   const totalQuestions = userAnswers.length;
   let correctCount = 0;
+
   const results = userAnswers.map((userAnswer, index) => {
     const isCorrect = userAnswer === correctAnswers[index];
     if (isCorrect) {
@@ -18,7 +19,7 @@ function QuizResults({ userAnswers, correctAnswers }) {
     );
   });
 
-  const score = (correctCount / totalQuestions) * 100;
+  const score = ((correctCount / totalQuestions) * 100).toFixed(2); // Calculate the score
 
   return (
     <div>
@@ -26,6 +27,13 @@ function QuizResults({ userAnswers, correctAnswers }) {
       <p>Your Score: {score}%</p>
       <p>Total Questions: {totalQuestions}</p>
       {results}
+      <button
+        onClick={() => {
+          setHasSelCat(false);
+        }}
+      >
+        Back to Categories
+      </button>
     </div>
   );
 }

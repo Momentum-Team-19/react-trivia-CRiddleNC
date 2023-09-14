@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import he from "he";
+import QuizResults from "./QuizResults"; // Import the QuizResults component
 
 function TriviaQuestions({
   questions,
@@ -17,12 +18,14 @@ function TriviaQuestions({
   const [incorrectGuesses, setIncorrectGuesses] = useState(0);
   const [shuffledAnswers, setShuffledAnswers] = useState([]);
   const [userAnswers, setUserAnswers] = useState([]);
-  const [quizCompleted, setQuizCompleted] = useState(false);
+  const [quizCompleted, setQuizCompleted] = useState(false); // Add quizCompleted state
 
   const handleNextQuestion = () => {
     if (activeQuestInd < questions.length - 1) {
       setActiveQuestInd(activeQuestInd + 1);
       setIncorrectGuesses(0);
+    } else {
+      setQuizCompleted(true); // Set quiz as completed
     }
   };
 
@@ -42,7 +45,6 @@ function TriviaQuestions({
   useEffect(() => {
     if (selCat) {
       fetchQuestions(selCat.id);
-      setUserAnswers([]);
     }
   }, [selCat]);
 
@@ -69,63 +71,63 @@ function TriviaQuestions({
   const handleAnswer = (selectedAnswer) => {
     const isCorrect =
       selectedAnswer === he.decode(questions[activeQuestInd].correct_answer);
-
-    // Update userAnswers array with true (correct) or false (incorrect)
+    // Update userAnswers with the user's response
     setUserAnswers((prevAnswers) => [...prevAnswers, isCorrect]);
 
-    if (setActiveQuestInd < questions.length - 1) {
+    if (activeQuestInd < questions.length - 1) {
+      setActiveQuestInd(activeQuestInd + 1);
       setIncorrectGuesses(0);
     } else {
+      // All questions answered, show results
       setQuizCompleted(true);
     }
-
-    // Move to the next question
-    handleNextQuestion();
   };
 
-  if (quest) {
-    return (
-      <div>
-        <h2>Trivia Questions</h2>
-        <p>{he.decode(quest.question)}</p>
-        <p>{he.decode(quest.correct_answer)}</p>
+  return (
+    <div>
+      <h2>Trivia Questions</h2>
+      {!quizCompleted && quest && (
+        <div>
+          <p>{he.decode(quest.question)}</p>
+          <p>{he.decode(quest.correct_answer)}</p>
 
-        {userAnswers[activeQuestInd] !== undefined && (
-          <p>
-            {userAnswers[activeQuestInd] ? "Correct" : "Incorrect"} Answer:{" "}
-            {he.decode(quest.correct_answer)}
-          </p>
-        )}
+          {shuffledAnswers.map((answerOption) => (
+            <button
+              key={answerOption}
+              onClick={() => handleAnswer(answerOption)}
+            >
+              {answerOption}
+            </button>
+          ))}
 
-        {shuffledAnswers.map((answerOption) => (
-          <button key={answerOption} onClick={() => handleAnswer(answerOption)}>
-            {answerOption}
+          {incorrectGuesses >= 3 && (
+            <p>Correct Answer: {he.decode(quest.correct_answer)}</p>
+          )}
+
+          <p># of Wrong Answers: {wrongAnswerCount}</p>
+          <button onClick={handlePreviousQuestion}>Previous Question</button>
+          <button onClick={handleNextQuestion}>Next Question</button>
+          <button
+            onClick={() => {
+              setHasSelCat(false);
+            }}
+          >
+            Back to Categories
           </button>
-        ))}
+        </div>
+      )}
 
-        {incorrectGuesses >= 3 && (
-          <p>Correct Answer: {he.decode(quest.correct_answer)}</p>
-        )}
-
-        <p># of Wrong Answers: {wrongAnswerCount}</p>
-        <button onClick={handlePreviousQuestion}>Previous Question</button>
-        <button onClick={handleNextQuestion}>Next Question</button>
-        <button
-          onClick={() => {
-            setHasSelCat(false);
-          }}
-        >
-          Back to Categories
-        </button>
-      </div>
-    );
-  } else {
-    return (
-      <div>
-        <h2>Trivia Questions</h2>
-      </div>
-    );
-  }
+      {quizCompleted && (
+        <QuizResults
+          userAnswers={userAnswers}
+          setHasSelCat={setHasSelCat}
+          correctAnswers={questions.map(
+            (q) => he.decode(q.correct_answer) // Extract correct answers
+          )}
+        />
+      )}
+    </div>
+  );
 }
 
 export default TriviaQuestions;
