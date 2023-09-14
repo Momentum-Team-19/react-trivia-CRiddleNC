@@ -1,15 +1,21 @@
 // QuizResults.jsx
-import React from "react";
+import React, { useState } from "react";
 
 function QuizResults({ userAnswers, correctAnswers, setHasSelCat }) {
   const totalQuestions = userAnswers.length;
-  let correctCount = 0;
+  const [isCorrect, setIsCorrect] = useState(false);
+  const [correctCount, setCorrectCount] = useState(0);
 
   const results = userAnswers.map((userAnswer, index) => {
-    const isCorrect = userAnswer === correctAnswers[index];
-    if (isCorrect) {
-      correctCount++;
+    if (userAnswer === correctAnswers[index]) {
+      // const isCorrect = userAnswer === correctAnswers[index];
+      setCorrectCount(correctCount + 1);
+      setIsCorrect(true);
+    } else {
+      setCorrectCount(correctCount);
+      setIsCorrect(false);
     }
+
     return (
       <div key={index}>
         <p>
@@ -19,7 +25,7 @@ function QuizResults({ userAnswers, correctAnswers, setHasSelCat }) {
     );
   });
 
-  const score = ((correctCount / totalQuestions) * 100).toFixed(2); // Calculate the score
+  const score = (correctCount / totalQuestions) * 100; // Calculate the score
 
   return (
     <div>
