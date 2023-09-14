@@ -6,6 +6,7 @@ import "./App.css";
 import Categories from "./components/Catagories";
 import { Loading } from "./components/Loading";
 import TriviaQuestions from "./components/TriviaQuestions";
+import he from "he";
 
 function App() {
   const [trivCatData, setTrivCatData] = useState([]);
@@ -46,6 +47,7 @@ function App() {
           setActiveQuestInd={setActiveQuestInd}
           setHasSelCat={setHasSelCat}
           setWrongAnswerCount={setWrongAnswerCount}
+          correctAnswers={questions.map((q) => he.decode(q.correct_answer))}
         />
       ) : (
         <Categories trivCatData={trivCatData} handleCategory={handleCategory} />
