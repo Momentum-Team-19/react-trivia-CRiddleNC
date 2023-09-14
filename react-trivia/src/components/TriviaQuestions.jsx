@@ -17,6 +17,7 @@ function TriviaQuestions({
   const [incorrectGuesses, setIncorrectGuesses] = useState(0);
   const [shuffledAnswers, setShuffledAnswers] = useState([]);
   const [userAnswers, setUserAnswers] = useState([]);
+  const [quizCompleted, setQuizCompleted] = useState(false);
 
   const handleNextQuestion = () => {
     if (activeQuestInd < questions.length - 1) {
@@ -71,6 +72,12 @@ function TriviaQuestions({
 
     // Update userAnswers array with true (correct) or false (incorrect)
     setUserAnswers((prevAnswers) => [...prevAnswers, isCorrect]);
+
+    if (setActiveQuestInd < questions.length - 1) {
+      setIncorrectGuesses(0);
+    } else {
+      setQuizCompleted(true);
+    }
 
     // Move to the next question
     handleNextQuestion();
