@@ -16,6 +16,7 @@ function TriviaQuestions({
 }) {
   const quest = questions[activeQuestInd];
   const [incorrectGuesses, setIncorrectGuesses] = useState(0);
+  const [shuffledAnswers, setShuffledAnswers] = useState([]);
 
   const handleNextQuestion = () => {
     if (activeQuestInd < questions.length - 1) {
@@ -49,6 +50,9 @@ function TriviaQuestions({
       selectedAnswer === he.decode(questions[activeQuestInd].correct_answer)
     ) {
       // If the selected answer is correct, increment the score or perform other logic here
+
+      // Move to the next question
+      handleNextQuestion();
     } else {
       setWrongAnswerCount((prevCount) => prevCount + 1); // Increment wrong answer count
     }
