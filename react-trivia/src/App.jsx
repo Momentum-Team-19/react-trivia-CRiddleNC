@@ -19,14 +19,27 @@ function App() {
   const handleCategory = (trivCatData) => {
     setSelCat(trivCatData);
     setHasSelCat(true);
+    setActiveQuestInd(0);
+    fetchQuestions(trivCatData.id);
   };
 
   const handleAnswer = (selectedAnswer) => {
-    if (selectedAnswer === he.decode(quest.correct_answer)) {
+    // Check the selected answer against the correct answer
+    if (
+      selectedAnswer === he.decode(questions[activeQuestInd].correct_answer)
+    ) {
+      // Handle correct answer logic (if needed)
     } else {
       setWrongAnswerCount(wrongAnswerCount + 1);
     }
-    handleNext;
+    // Move to the next question
+    handleNextQuestion();
+  };
+
+  const fetchQuestions = (categoryId) => {
+    axios
+      .get(`https://opentdb.com/api.php?amount=10&category=${categoryId}`)
+      .then((response) => setQuestions(response.data.results));
   };
 
   useEffect(() => {

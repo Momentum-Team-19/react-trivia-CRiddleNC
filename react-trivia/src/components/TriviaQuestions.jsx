@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import he from "he";
-import Categories from "./Catagories";
 
 function TriviaQuestions({
   questions,
@@ -10,6 +9,8 @@ function TriviaQuestions({
   activeQuestInd,
   setActiveQuestInd,
   setHasSelCat,
+  handleAnswer,
+  selCat,
 }) {
   const quest = questions[activeQuestInd];
 
@@ -20,26 +21,28 @@ function TriviaQuestions({
   };
 
   const handlePreviousQuestion = () => {
-    if (activeQuestInd != 0) {
+    if (activeQuestInd !== 0) {
       setActiveQuestInd(activeQuestInd - 1);
     }
   };
 
-  // // figure out how to get back to my list of categories
-  // const handleBackToCats = () => {};
+  const fetchQuestions = (categoryId) => {
+    axios
+      .get(`https://opentdb.com/api.php?amount=10&category=${categoryId}`)
+      .then((response) => setQuestions(response.data.results));
+  };
 
   useEffect(() => {
-    axios
-      .get(`https://opentdb.com/api.php?amount=10&`)
-      .then((response) => setQuestions(response.data.results));
-  }, []);
+    if (selCat) {
+      fetchQuestions(selCat.id);
+    }
+  }, [selCat]);
 
   if (quest) {
-    // combine correct and incorrect answerrs in to one array
+    // combine correct and incorrect answers into one array
     const all_answers = [quest.correct_answer, ...quest.incorrect_answers].map(
       (answer) => he.decode(answer)
     );
-    // decode all_answers and join them in to a string
 
     // set all_answers to a randomized version of itself with Math.random function
     all_answers.sort(() => Math.random() - 0.5);
@@ -47,11 +50,9 @@ function TriviaQuestions({
     return (
       <div>
         <h2>Trivia Questions</h2>
-        {console.log(quest.category)}
         <p>{he.decode(quest.question)}</p>
         <p>{he.decode(quest.correct_answer)}</p>
 
-        {/* <p>Answers: {all_answers.join(", ")}</p> */}
         {all_answers.map((answerOption) => (
           <button key={answerOption} onClick={() => handleAnswer(answerOption)}>
             {answerOption}
