@@ -9,20 +9,25 @@ function TriviaQuestions({
   activeQuestInd,
   setActiveQuestInd,
   setHasSelCat,
-  handleAnswer,
+  handleAnswer: handleAnswerProp,
   selCat,
+  wrongAnswerCount,
+  setWrongAnswerCount,
 }) {
   const quest = questions[activeQuestInd];
+  const [incorrectGuesses, setIncorrectGuesses] = useState(0);
 
   const handleNextQuestion = () => {
     if (activeQuestInd < questions.length - 1) {
       setActiveQuestInd(activeQuestInd + 1);
+      setIncorrectGuesses(0);
     }
   };
 
   const handlePreviousQuestion = () => {
     if (activeQuestInd !== 0) {
       setActiveQuestInd(activeQuestInd - 1);
+      setIncorrectGuesses(0);
     }
   };
 
@@ -37,6 +42,18 @@ function TriviaQuestions({
       fetchQuestions(selCat.id);
     }
   }, [selCat]);
+
+  const handleAnswer = (selectedAnswer) => {
+    // Check the selected answer against the correct answer
+    if (
+      selectedAnswer === he.decode(questions[activeQuestInd].correct_answer)
+    ) {
+      // If the selected answer is correct, increment the score or perform other logic here
+    } else {
+      setWrongAnswerCount((prevCount) => prevCount + 1); // Increment wrong answer count
+    }
+    // Do not automatically move to the next question here
+  };
 
   if (quest) {
     // combine correct and incorrect answers into one array
@@ -59,6 +76,11 @@ function TriviaQuestions({
           </button>
         ))}
 
+        {incorrectGuesses >= 3 && (
+          <p>Correct Answer: {he.decode(quest.correct_answer)}</p>
+        )}
+
+        <p># of Wrong Answers: {wrongAnswerCount}</p>
         <button onClick={handlePreviousQuestion}>Previous Question</button>
         <button onClick={handleNextQuestion}>Next Question</button>
         <button
