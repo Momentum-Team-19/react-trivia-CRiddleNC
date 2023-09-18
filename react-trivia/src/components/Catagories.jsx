@@ -1,10 +1,10 @@
 // Catagories.jsx
-import React from "react"
+import React from "react";
 
 function Categories({ trivCatData, handleCategory }) {
-
-    return (
+  return (
     <div>
+      <h2>Choose a category to start a quiz!</h2>
       {trivCatData.map((trivCat) => (
         <button
           id={trivCat.id}

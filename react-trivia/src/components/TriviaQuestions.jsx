@@ -87,33 +87,35 @@ function TriviaQuestions({
     <div>
       <h2>Trivia Questions</h2>
       {!quizCompleted && quest && (
-        <div>
-          <p>{he.decode(quest.question)}</p>
-          <p>{he.decode(quest.correct_answer)}</p>
+        <div className='page-container'>
+          <div className='answer-box'>
+            <p>{he.decode(quest.question)}</p>
+            {/* <p>{he.decode(quest.correct_answer)}</p> */}
 
-          {shuffledAnswers.map((answerOption) => (
+            {shuffledAnswers.map((answerOption) => (
+              <button
+                key={answerOption}
+                onClick={() => handleAnswer(answerOption)}
+              >
+                {answerOption}
+              </button>
+            ))}
+            {incorrectGuesses >= 3 && (
+              <p>Correct Answer: {he.decode(quest.correct_answer)}</p>
+            )}
+          </div>
+          <div className='button-box'>
+            {/* <p># of Wrong Answers: {wrongAnswerCount}</p> */}
+            <button onClick={handlePreviousQuestion}>Previous Question</button>
+            <button onClick={handleNextQuestion}>Next Question</button>
             <button
-              key={answerOption}
-              onClick={() => handleAnswer(answerOption)}
+              onClick={() => {
+                setHasSelCat(false);
+              }}
             >
-              {answerOption}
+              Back to Categories
             </button>
-          ))}
-
-          {incorrectGuesses >= 3 && (
-            <p>Correct Answer: {he.decode(quest.correct_answer)}</p>
-          )}
-
-          <p># of Wrong Answers: {wrongAnswerCount}</p>
-          <button onClick={handlePreviousQuestion}>Previous Question</button>
-          <button onClick={handleNextQuestion}>Next Question</button>
-          <button
-            onClick={() => {
-              setHasSelCat(false);
-            }}
-          >
-            Back to Categories
-          </button>
+          </div>
         </div>
       )}
 
@@ -124,6 +126,7 @@ function TriviaQuestions({
           correctAnswers={questions.map(
             (q) => he.decode(q.correct_answer) // Extract correct answers
           )}
+          questions={questions.map((q) => he.decode(q.question))}
         />
       )}
     </div>

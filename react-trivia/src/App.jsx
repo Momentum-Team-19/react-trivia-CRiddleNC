@@ -1,6 +1,6 @@
 // App.jsx
 // Import modules and components
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./App.css";
 import Categories from "./components/Catagories";
@@ -16,6 +16,7 @@ function App() {
   const [questions, setQuestions] = useState([]);
   const [activeQuestInd, setActiveQuestInd] = useState(0);
   const [wrongAnswerCount, setWrongAnswerCount] = useState(0);
+  const [restartQuiz, setRestartQuiz] = useState(false);
 
   const handleCategory = (trivCatData) => {
     setSelCat(trivCatData);
@@ -30,6 +31,15 @@ function App() {
       .then((response) => setQuestions(response.data.results));
   };
 
+  const handleRestartQuiz = () => {
+    setRestartQuiz(true);
+    setQuestions([]);
+    setActiveQuestInd(0);
+    setWrongAnswerCount(0);
+    setQuizCompleted(false);
+    setUserAnswers([]);
+  };
+
   useEffect(() => {
     axios
       .get("https://opentdb.com/api_category.php")
@@ -38,8 +48,9 @@ function App() {
 
   return (
     <>
-      <h1>Trivia!</h1>
-      {hasSelCat ? (
+      <h1>Trivia Time!</h1>
+
+      {hasSelCat && questions.length > 0 ? (
         <TriviaQuestions
           questions={questions}
           setQuestions={setQuestions}
